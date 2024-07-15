@@ -1,5 +1,6 @@
 const mongoConnect = require('../util/database');
 const getDb = require('../util/database').getDb;
+const mongoDb = require('mongodb');
 
 
 class Product {
@@ -19,6 +20,35 @@ class Product {
       .catch(err => {
         console.log(err);
       })
+    }
+
+    static fetchAll(){
+      const db = getDb();
+      return db.collection('products').find().toArray()
+      .then(products => {
+        console.log(products)
+        return products;
+      })
+      .catch(err => {
+        console.log(err);
+      })
+    }
+
+    static findById(prodId){
+      const db = getDb();
+
+      const id = new mongoDb.ObjectId(prodId);
+
+      return db.collection('products').find({_id: id })
+      .next()
+      .then(product => {
+        console.log(product)
+        return product;
+      })
+      .catch(err => {
+        console.log(err);
+      })
+
     }
 
 }
