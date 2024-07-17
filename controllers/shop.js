@@ -1,4 +1,5 @@
 const Product = require('../models/product');
+const {ObjectId} = require('mongodb');
 
 exports.getProducts = (req, res, next) => {
   Product.fetchAll()
@@ -16,6 +17,8 @@ exports.getProducts = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
+  
+  const objectId = new ObjectId(prodId);
   // Product.findAll({ where: { id: prodId } })
   //   .then(products => {
   //     res.render('shop/product-detail', {
@@ -25,7 +28,7 @@ exports.getProduct = (req, res, next) => {
   //     });
   //   })
   //   .catch(err => console.log(err));
-  Product.findById(prodId)
+  Product.findById(objectId)
     .then(product => {
       res.render('shop/product-detail', {
         product: product,

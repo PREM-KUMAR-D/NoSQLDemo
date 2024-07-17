@@ -18,7 +18,7 @@ class User {
 
   addToCart(product) {
     const cartProductIndex = this.cart.items.findIndex(cp => {
-      return cp.productId.toString() === product._id.toString();
+      return cp._id.toString() === product._id.toString();
     });
     let newQuantity = 1;
     const updatedCartItems = [...this.cart.items];
@@ -28,8 +28,12 @@ class User {
       updatedCartItems[cartProductIndex].quantity = newQuantity;
     } else {
       updatedCartItems.push({
-        productId: new ObjectId(product._id),
-        quantity: newQuantity
+        _id: new ObjectId(product._id),
+        quantity: newQuantity,
+        title: product.title,
+        price: product.price,
+        imageUrl: product.imageUrl,
+        description: product.description
       });
     }
     const updatedCart = {
@@ -47,7 +51,7 @@ class User {
   getCart() {
     const db = getDb();
     const productIds = this.cart.items.map(i => {
-      return i.productId;
+      return i._id;
     });
     return db
       .collection('products')
@@ -58,7 +62,7 @@ class User {
           return {
             ...p,
             quantity: this.cart.items.find(i => {
-              return i.productId.toString() === p._id.toString();
+              return i._id.toString() === p._id.toString();
             }).quantity
           };
         });
